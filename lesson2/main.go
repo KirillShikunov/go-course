@@ -23,12 +23,14 @@ func (zookeeper *Zookeeper) dump() {
 	zookeeper.cageManager.dump()
 }
 
+const MaxCagesNumber = 5
+
 func (zookeeper *Zookeeper) catchAnimal(animal *Animal) {
 	zookeeper.cageManager.addAnimal(animal)
 }
 
 func main() {
-	cageManager := CageManager{1, []Cage{}}
+	cageManager := CageManager{make([]Cage, 0, MaxCagesNumber)}
 	zookeeper := Zookeeper{&cageManager}
 
 	elephant := Animal{"Mike", "Elephant"}
@@ -40,8 +42,7 @@ func main() {
 }
 
 type CageManager struct {
-	maxCagesNumber int
-	cages          []Cage
+	cages []Cage
 }
 
 func (manager *CageManager) addAnimal(animal *Animal) {
@@ -54,7 +55,7 @@ func (manager *CageManager) addAnimal(animal *Animal) {
 }
 
 func (manager *CageManager) isFreeSpot() bool {
-	return len(manager.cages) < manager.maxCagesNumber
+	return len(manager.cages) < cap(manager.cages)
 }
 
 func (manager *CageManager) dump() {
