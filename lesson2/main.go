@@ -7,41 +7,59 @@ type Animal struct {
 	class string
 }
 
+func (animal *Animal) fullName() string {
+	return fmt.Sprintf("%s(%s)", animal.name, animal.class)
+}
+
 type Cage struct {
-	animal Animal
-	//number int
+	animal *Animal
 }
 
 type Zookeeper struct {
-	cage *Cage
+	cageManager *CageManager
 }
 
 func (zookeeper *Zookeeper) dump() {
-	if zookeeper.cage == nil {
-		fmt.Print("Cage is empty")
-		return
-	}
-
-	fmt.Printf("%s(%s) is in a cage", zookeeper.cage.animal.class, zookeeper.cage.animal.name)
+	zookeeper.cageManager.dump()
 }
 
-func (zookeeper *Zookeeper) pushAnimal(animal Animal) {
-	if zookeeper.cage != nil {
-		fmt.Print("Cage is not empty")
-		return
-	}
-	zookeeper.cage = &Cage{animal}
-
-}
-
-func (zookeeper *Zookeeper) popAnimal(animal Animal) {
-	zookeeper.cage = &Cage{animal}
+func (zookeeper *Zookeeper) catchAnimal(animal *Animal) {
+	zookeeper.cageManager.addAnimal(animal)
 }
 
 func main() {
-	elephant := Animal{"Mike", "Elephant"}
-	zookeeper := Zookeeper{}
+	cageManager := CageManager{1, []Cage{}}
+	zookeeper := Zookeeper{&cageManager}
 
-	zookeeper.pushAnimal(elephant)
+	elephant := Animal{"Mike", "Elephant"}
+	lion := Animal{"Alex", "lion"}
+
+	zookeeper.catchAnimal(&elephant)
+	zookeeper.catchAnimal(&lion)
 	zookeeper.dump()
+}
+
+type CageManager struct {
+	maxCagesNumber int
+	cages          []Cage
+}
+
+func (manager *CageManager) addAnimal(animal *Animal) {
+	if manager.isFreeSpot() == false {
+		fmt.Printf("Error: You cannot add %s to cage because do not have free cage. \n", animal.fullName())
+		return
+	}
+
+	manager.cages = append(manager.cages, Cage{animal})
+}
+
+func (manager *CageManager) isFreeSpot() bool {
+	return len(manager.cages) < manager.maxCagesNumber
+}
+
+func (manager *CageManager) dump() {
+	fmt.Print("Cages status:\n")
+	for i, cage := range manager.cages {
+		fmt.Printf("%s in a cage #%d. \n", cage.animal.fullName(), i+1)
+	}
 }
