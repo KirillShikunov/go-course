@@ -9,13 +9,15 @@ import (
 
 func main() {
 	actManager := getActManager()
+	actPrinter := ActPrinter{}
+
 	scanner := bufio.NewScanner(os.Stdin)
 	currentActId := actManager.getStartId()
 
 	for {
 		act := actManager.getAct(currentActId)
 
-		actManager.showAct(act)
+		actPrinter.showAct(act)
 
 		option, err := scanOption(scanner)
 		if isExistOption(err, option, act) == false {

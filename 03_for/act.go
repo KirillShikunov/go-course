@@ -25,20 +25,14 @@ func (actManager ActManager) getAct(actId int) Act {
 	return act
 }
 
-func (actManager ActManager) showAct(act Act) {
-	actPrinter := ActPrinter{act}
-	actPrinter.showAct()
-}
-
 type ActPrinter struct {
-	act Act
 }
 
-func (actPrinter ActPrinter) showAct() {
-	fmt.Printf("Ситуація: %s \n", actPrinter.act.text)
+func (actPrinter ActPrinter) showAct(act Act) {
+	fmt.Printf("Ситуація: %s \n", act.text)
 
 	fmt.Printf("Варіанти дій: \n")
-	for i, option := range actPrinter.act.options {
+	for i, option := range act.options {
 		fmt.Printf("#%d %s \n", i+1, option.text)
 	}
 }
