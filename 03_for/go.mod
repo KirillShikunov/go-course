@@ -1,4 +1,4 @@
-module go-course/lesson1
+module go-course/03_for
 
 go 1.22.0
 

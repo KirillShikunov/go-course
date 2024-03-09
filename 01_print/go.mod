@@ -1,4 +1,4 @@
-module go-course/lesson2
+module go-course/01_print
 
 go 1.22.0
 
