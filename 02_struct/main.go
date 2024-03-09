@@ -29,18 +29,6 @@ func (zookeeper *Zookeeper) catchAnimal(animal *Animal) {
 	zookeeper.cageManager.addAnimal(animal)
 }
 
-func main() {
-	cageManager := CageManager{make([]Cage, 0, MaxCagesNumber)}
-	zookeeper := Zookeeper{&cageManager}
-
-	elephant := Animal{"Mike", "Elephant"}
-	lion := Animal{"Alex", "lion"}
-
-	zookeeper.catchAnimal(&elephant)
-	zookeeper.catchAnimal(&lion)
-	zookeeper.dump()
-}
-
 type CageManager struct {
 	cages []Cage
 }
@@ -63,4 +51,16 @@ func (manager *CageManager) dump() {
 	for i, cage := range manager.cages {
 		fmt.Printf("%s in a cage #%d. \n", cage.animal.fullName(), i+1)
 	}
+}
+
+func main() {
+	cageManager := CageManager{make([]Cage, 0, MaxCagesNumber)}
+	zookeeper := Zookeeper{&cageManager}
+
+	elephant := Animal{"Mike", "Elephant"}
+	lion := Animal{"Alex", "lion"}
+
+	zookeeper.catchAnimal(&elephant)
+	zookeeper.catchAnimal(&lion)
+	zookeeper.dump()
 }
