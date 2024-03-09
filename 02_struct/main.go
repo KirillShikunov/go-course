@@ -55,7 +55,7 @@ func (manager *CageManager) addAnimal(animal *Animal) {
 }
 
 func (manager *CageManager) isFreeSpot() bool {
-	return len(manager.cages) < cap(manager.cages)
+	return len(manager.cages) < MaxCagesNumber
 }
 
 func (manager *CageManager) dump() {
