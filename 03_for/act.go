@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"strconv"
+)
 
 type Option struct {
 	nextActId int
@@ -10,6 +14,14 @@ type Option struct {
 type Act struct {
 	options []Option
 	text    string
+}
+
+func (act Act) getNextActId(optionIndex int) int {
+	return act.options[optionIndex-1].nextActId
+}
+
+func (act Act) isExistOption(optionIndex int) bool {
+	return optionIndex >= 1 && optionIndex <= len(act.options)
 }
 
 type ActManager struct {
@@ -25,16 +37,25 @@ func (actManager ActManager) getAct(actId int) Act {
 	return act
 }
 
-type ActPrinter struct {
+type ConsoleManager struct {
+	scanner *bufio.Scanner
 }
 
-func (actPrinter ActPrinter) showAct(act Act) {
+func (consoleManager ConsoleManager) showAct(act Act) {
 	fmt.Printf("Ситуація: %s \n", act.text)
 
 	fmt.Printf("Варіанти дій: \n")
 	for i, option := range act.options {
 		fmt.Printf("#%d %s \n", i+1, option.text)
 	}
+}
+
+func (consoleManager ConsoleManager) getOptionIndex() (int, error) {
+	consoleManager.scanner.Scan()
+	input := consoleManager.scanner.Text()
+	option, err := strconv.Atoi(input)
+
+	return option, err
 }
 
 func getActManager() ActManager {
@@ -125,15 +146,15 @@ func getActManager() ActManager {
 			12: {
 				text: "Ви вирішили не ризикувати з читанням книги та залишити її. Продовжуючи свій шлях, ви натрапляєте на таємниче озеро.",
 				options: []Option{
-					{nextActId: 20, text: "Підійти ближче та розглянути озеро."},
-					{nextActId: 20, text: "Обійти озеро стороною і продовжити свій шлях."},
+					{nextActId: 0, text: "Підійти ближче та розглянути озеро."},
+					{nextActId: 0, text: "Обійти озеро стороною і продовжити свій шлях."},
 				},
 			},
 			13: {
 				text: "Взявши книгу з собою, ви вирушаєте далі по лісу. Раптово перед вами з'являється старий мудрець.",
 				options: []Option{
-					{nextActId: 20, text: "Показати мудрецю книгу і попросити пораду."},
-					{nextActId: 20, text: "Запитати мудреця про найкращий шлях через ліс."},
+					{nextActId: 0, text: "Показати мудрецю книгу і попросити пораду."},
+					{nextActId: 0, text: "Запитати мудреця про найкращий шлях через ліс."},
 				},
 			},
 		},
