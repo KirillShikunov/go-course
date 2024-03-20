@@ -24,11 +24,19 @@ func (consoleManager ConsoleManager) ShowRows(rows []string) {
 	}
 }
 
+func (consoleManager ConsoleManager) ShowAvgSearchDuration(totalSearchDuration int64, countSearch int) {
+	fmt.Printf("Середній час пошуку: %dнаносекунд\n", totalSearchDuration/int64(countSearch))
+}
+
 func (consoleManager ConsoleManager) GetSearchWord() string {
 	consoleManager.scanner.Scan()
 	searchWord := consoleManager.scanner.Text()
 
 	return strings.TrimSpace(searchWord)
+}
+
+func (consoleManager ConsoleManager) AddBreakLine() {
+	fmt.Println()
 }
 
 func NewConsoleManager() ConsoleManager {

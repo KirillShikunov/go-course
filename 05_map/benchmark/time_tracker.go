@@ -7,8 +7,8 @@ import (
 type TimeTracker struct {
 }
 
-func (timeTracker TimeTracker) Track(f func()) string {
+func (timeTracker TimeTracker) Track(f func()) int64 {
 	start := time.Now()
 	f()
-	return time.Since(start).String()
+	return time.Since(start).Nanoseconds()
 }

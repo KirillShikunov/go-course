@@ -21,7 +21,11 @@ func main() {
 	timeTracker := benchmark.TimeTracker{}
 
 	var matchedRows []string
-	var duration string
+	var duration int64
+	var totalSearchDurationByIndex int64
+	var totalSearchDurationByContain int64
+
+	countSearch := 1
 
 	for {
 		fmt.Println("Введить слово пошуку:")
@@ -31,17 +35,25 @@ func main() {
 		duration = timeTracker.Track(func() {
 			matchedRows = textManager.SearchWordByIndex(searchWord)
 		})
+		totalSearchDurationByIndex += duration
 
-		fmt.Printf("Час пошуку по індексу: %s\n", duration)
+		fmt.Printf("Час пошуку по індексу: %dнаносекунд\n", duration)
+		consoleManager.ShowAvgSearchDuration(totalSearchDurationByIndex, countSearch)
 		consoleManager.ShowRows(matchedRows)
 
-		fmt.Println() // Break row, add just for separate result two search functions
+		consoleManager.AddBreakLine()
 
 		duration = timeTracker.Track(func() {
 			matchedRows = textManager.SearchWordByContains(searchWord)
 		})
 
-		fmt.Printf("Час пошуку з використанням стандартник функцій: %s\n", duration)
+		totalSearchDurationByContain += duration
+
+		fmt.Printf("Час пошуку з використанням стандартник функцій: %dнаносекунд\n", duration)
+		consoleManager.ShowAvgSearchDuration(totalSearchDurationByContain, countSearch)
 		consoleManager.ShowRows(matchedRows)
+
+		consoleManager.AddBreakLine()
+		countSearch++
 	}
 }
