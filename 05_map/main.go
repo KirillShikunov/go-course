@@ -29,7 +29,6 @@ func main() {
 
 	for {
 		fmt.Println("Введить слово пошуку:")
-
 		searchWord := consoleManager.GetSearchWord()
 
 		duration = timeTracker.Track(func() {
@@ -46,7 +45,6 @@ func main() {
 		duration = timeTracker.Track(func() {
 			matchedRows = textManager.SearchWordByContains(searchWord)
 		})
-
 		totalSearchDurationByContain += duration
 
 		fmt.Printf("Час пошуку з використанням стандартник функцій: %dнаносекунд\n", duration)
