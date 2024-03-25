@@ -39,13 +39,13 @@ type TourStep struct {
 
 func (t TourStep) Print(dto *dto.ProcessorDTO) error {
 	fmt.Println("Тури за вашим бюджетом:")
-	toursByBudget := t.manager.FindByBudget(dto.GetBudget())
+	toursByBudget := t.manager.FindByBudget(dto.Budget())
 	if len(toursByBudget) == 0 {
 		return fmt.Errorf("турів за вашим бюджетом не знайдено")
 	}
 
-	for _, tourItem := range toursByBudget {
-		fmt.Printf("#%d %s | Ціна: %dгрн\n", tourItem.GetId(), tourItem.GetName(), tourItem.GetPrice())
+	for _, tourBudget := range toursByBudget {
+		fmt.Printf("#%d %s | Ціна: %dгрн\n", tourBudget.Id(), tourBudget.Name(), tourBudget.Price())
 	}
 
 	return nil

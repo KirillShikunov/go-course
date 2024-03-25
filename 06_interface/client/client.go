@@ -4,7 +4,7 @@ type Client struct {
 	name string
 }
 
-func (c *Client) GetName() string {
+func (c *Client) Name() string {
 	return c.name
 }
 

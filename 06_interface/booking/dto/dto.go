@@ -12,7 +12,7 @@ type ProcessorDTO struct {
 	tour   *tour.Tour
 }
 
-func (p *ProcessorDTO) GetBudget() int {
+func (p *ProcessorDTO) Budget() int {
 	return p.budget
 }
 
@@ -31,11 +31,11 @@ func (p *ProcessorDTO) SetClient(client *client.Client) {
 func (p *ProcessorDTO) Print() {
 	fmt.Println("Інформація:")
 
-	fmt.Printf("Тур: %s.\n", p.tour.GetName())
-	fmt.Printf("Ціна: %dгрн\n", p.tour.GetPrice())
+	fmt.Printf("Тур: %s\n", p.tour.Name())
+	fmt.Printf("Ціна: %dгрн\n", p.tour.Price())
 	fmt.Println("Транспорт:")
-	for i, transport := range p.tour.GetTransports() {
-		fmt.Printf("#%d %s\n", i+1, transport.GetName())
+	for i, transport := range p.tour.Transports() {
+		fmt.Printf("#%d %s\n", i+1, transport.Name())
 	}
-	fmt.Printf("Ваше Ім'я: %s\n", p.client.GetName())
+	fmt.Printf("Ваше Ім'я: %s\n", p.client.Name())
 }

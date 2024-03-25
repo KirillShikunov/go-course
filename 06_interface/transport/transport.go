@@ -3,14 +3,14 @@ package transport
 import "fmt"
 
 type Transport interface {
-	GetName() string
+	Name() string
 }
 
 type Car struct {
 	number string
 }
 
-func (c *Car) GetName() string {
+func (c *Car) Name() string {
 	return fmt.Sprintf("Авто №%s", c.number)
 }
 
@@ -22,7 +22,7 @@ type Plane struct {
 	name string
 }
 
-func (p *Plane) GetName() string {
+func (p *Plane) Name() string {
 	return fmt.Sprintf("Літак \"%s\"", p.name)
 }
 
@@ -34,7 +34,7 @@ type Boat struct {
 	name string
 }
 
-func (b *Boat) GetName() string {
+func (b *Boat) Name() string {
 	return fmt.Sprintf("Човен \"%s\"", b.name)
 }
 
@@ -46,7 +46,7 @@ type Train struct {
 	name string
 }
 
-func (t *Train) GetName() string {
+func (t *Train) Name() string {
 	return fmt.Sprintf("Поїзд \"%s\"", t.name)
 }
 

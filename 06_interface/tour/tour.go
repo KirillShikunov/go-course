@@ -12,19 +12,19 @@ type Tour struct {
 	transports []transport.Transport
 }
 
-func (t *Tour) GetPrice() int {
+func (t *Tour) Price() int {
 	return t.price
 }
 
-func (t *Tour) GetId() int {
+func (t *Tour) Id() int {
 	return t.id
 }
 
-func (t *Tour) GetName() string {
+func (t *Tour) Name() string {
 	return t.name
 }
 
-func (t *Tour) GetTransports() []transport.Transport {
+func (t *Tour) Transports() []transport.Transport {
 	return t.transports
 }
 
