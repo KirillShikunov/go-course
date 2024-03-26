@@ -4,52 +4,37 @@ import (
 	"fmt"
 	"math/rand"
 	"sort"
-	"time"
 )
 
-const MaxRandomNumber = 100
-
-const RandomArrayLength = 10
-
-type MinMax struct {
-	min int
-	max int
-}
-
 func main() {
-	ch := make(chan []int)
-	ch2 := make(chan MinMax)
+	ch := make(chan int)
+	done := make(chan struct{})
 
-	go goroutineFindMinMax(ch, ch2)
+	go randomNumber(ch, 5, 10)
+	go findMinMax(ch, done)
 
-	for {
-		go mainGoroutine(ch, ch2)
-		time.Sleep(1 * time.Second)
-	}
+	<-done
 }
 
-func mainGoroutine(ch chan []int, ch2 chan MinMax) {
-	numbers := randomNumbers(MaxRandomNumber, RandomArrayLength)
-	fmt.Printf("array: %v\n", numbers)
-	ch <- numbers
-
-	minMax := <-ch2
-	fmt.Printf("Min: %d; Max: %d\n", minMax.min, minMax.max)
+func randomNumber(ch chan int, count int, max int) {
+	for i := 0; i < count; i++ {
+		ch <- rand.Intn(max)
+	}
+	close(ch)
 }
 
-func goroutineFindMinMax(ch chan []int, ch2 chan MinMax) {
-	for numbers := range ch {
-		sort.Ints(numbers)
-		ch2 <- MinMax{numbers[0], numbers[len(numbers)-1]}
-	}
-}
-
-func randomNumbers(max int, length int) []int {
-	numbers := make([]int, length)
-
-	for i := 0; i < length; i++ {
-		numbers[i] = rand.Intn(max)
+func findMinMax(ch chan int, done chan struct{}) {
+	var numbers []int
+	for number := range ch {
+		fmt.Printf("Random number: %d\n", number)
+		numbers = append(numbers, number)
 	}
 
-	return numbers
+	sort.Ints(numbers)
+	minNumber := numbers[0]
+	maxNumber := numbers[len(numbers)-1]
+
+	fmt.Printf("Min: %d; Max: %d", minNumber, maxNumber)
+
+	done <- struct{}{}
 }
