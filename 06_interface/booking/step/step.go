@@ -33,8 +33,16 @@ func (b BudgetStep) Process(value string, dto *dto.ProcessorDTO) error {
 	return nil
 }
 
+func NewBudgetStep() BudgetStep {
+	return BudgetStep{}
+}
+
 type TourStep struct {
 	manager tour.Manager
+}
+
+func NewTourStep(manager tour.Manager) TourStep {
+	return TourStep{manager: manager}
 }
 
 func (t TourStep) Print(dto *dto.ProcessorDTO) error {
@@ -67,29 +75,20 @@ func (t TourStep) Process(value string, dto *dto.ProcessorDTO) error {
 	return nil
 }
 
-type ClientNameStep struct {
+type ClientStep struct {
 }
 
-func (n ClientNameStep) Print(dto *dto.ProcessorDTO) error {
+func (n ClientStep) Print(dto *dto.ProcessorDTO) error {
 	fmt.Println("Вкажіть ваше ім'я:")
 	return nil
 }
 
-func (n ClientNameStep) Process(value string, dto *dto.ProcessorDTO) error {
+func (n ClientStep) Process(value string, dto *dto.ProcessorDTO) error {
 	newClient := client.NewClient(value)
 	dto.SetClient(&newClient)
 	return nil
 }
 
-func BuildBookingSteps() []Step {
-	var steps []Step
-
-	steps = append(steps, BudgetStep{})
-
-	tourManager := tour.BuildTourManager()
-	steps = append(steps, TourStep{manager: tourManager})
-
-	steps = append(steps, ClientNameStep{})
-
-	return steps
+func NewClientStep() ClientStep {
+	return ClientStep{}
 }

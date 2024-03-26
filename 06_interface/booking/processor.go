@@ -26,9 +26,7 @@ func (p *Processor) IsLastStep() bool {
 	return p.stepPointer+1 == len(p.steps)
 }
 
-func BuildBookProcessor() *Processor {
-	steps := step.BuildBookingSteps()
-
+func NewBookingProcessor(steps []step.Step) *Processor {
 	return &Processor{
 		steps: steps,
 	}

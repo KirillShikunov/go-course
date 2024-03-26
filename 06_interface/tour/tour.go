@@ -1,15 +1,18 @@
 package tour
 
 import (
-	"06_interface/transport"
 	"fmt"
 )
+
+type Transport interface {
+	Name() string
+}
 
 type Tour struct {
 	id         int
 	name       string
 	price      int
-	transports []transport.Transport
+	transports []Transport
 }
 
 func (t *Tour) Price() int {
@@ -24,8 +27,12 @@ func (t *Tour) Name() string {
 	return t.name
 }
 
-func (t *Tour) Transports() []transport.Transport {
+func (t *Tour) Transports() []Transport {
 	return t.transports
+}
+
+func NewTour(id int, name string, price int, transports []Transport) Tour {
+	return Tour{id, name, price, transports}
 }
 
 type Manager struct {
@@ -54,17 +61,6 @@ func (m *Manager) Get(id int) (*Tour, error) {
 	return nil, fmt.Errorf("тур(#%d) не вдалося знайти", id)
 }
 
-func BuildTourManager() Manager {
-	var tours []Tour
-
-	car := transport.NewCar("456DFG")
-	plane := transport.NewPlane("Airbus A320")
-	boat := transport.NewBoat("Лотка з ухилятнами")
-	train := transport.NewTrain("Eurostar")
-
-	tours = append(tours, Tour{1, "Вроцлав - Відень", 500, []transport.Transport{car, plane}})
-	tours = append(tours, Tour{2, "Прага - Берлін", 400, []transport.Transport{car, train}})
-	tours = append(tours, Tour{3, "Київ - Угорщина(через Тису)", 3000, []transport.Transport{car, boat}})
-
+func NewTourManager(tours []Tour) Manager {
 	return Manager{tours}
 }
