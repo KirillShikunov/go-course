@@ -2,54 +2,62 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"math/rand"
-	"sort"
-	"time"
 )
 
-const MaxRandomNumber = 100
-
-const RandomArrayLength = 10
-
 type MinMax struct {
-	min int
-	max int
+	Min int
+	Max int
 }
 
 func main() {
-	ch := make(chan []int)
-	ch2 := make(chan MinMax)
+	inputCh := make(chan int)
+	outputCh := make(chan MinMax)
+	done := make(chan struct{})
 
-	go goroutineFindMinMax(ch, ch2)
+	go randomNumber(inputCh, outputCh, done)
+	go findMinMax(inputCh, outputCh)
 
-	for {
-		go mainGoroutine(ch, ch2)
-		time.Sleep(1 * time.Second)
-	}
+	<-done
 }
 
-func mainGoroutine(ch chan []int, ch2 chan MinMax) {
-	numbers := randomNumbers(MaxRandomNumber, RandomArrayLength)
-	fmt.Printf("array: %v\n", numbers)
-	ch <- numbers
+func randomNumber(inputCh chan int, outputCh chan MinMax, done chan struct{}) {
+	for i := 0; i < 10; i++ {
+		inputCh <- rand.Intn(100)
+	}
+	close(inputCh)
 
-	minMax := <-ch2
-	fmt.Printf("Min: %d; Max: %d\n", minMax.min, minMax.max)
+	minMax := <-outputCh
+	fmt.Printf("Min number: %d, Max number: %d\n", minMax.Min, minMax.Max)
+
+	close(outputCh)
+
+	done <- struct{}{}
 }
 
-func goroutineFindMinMax(ch chan []int, ch2 chan MinMax) {
-	for numbers := range ch {
-		sort.Ints(numbers)
-		ch2 <- MinMax{numbers[0], numbers[len(numbers)-1]}
-	}
-}
-
-func randomNumbers(max int, length int) []int {
-	numbers := make([]int, length)
-
-	for i := 0; i < length; i++ {
-		numbers[i] = rand.Intn(max)
+func findMinMax(inputCh chan int, outputCh chan MinMax) {
+	var numbers []int
+	for number := range inputCh {
+		fmt.Printf("Random number: %d\n", number)
+		numbers = append(numbers, number)
 	}
 
-	return numbers
+	if len(numbers) == 0 {
+		outputCh <- MinMax{}
+		return
+	}
+
+	minNumber := math.MaxInt64
+	maxNumber := math.MinInt64
+	for _, number := range numbers {
+		if number < minNumber {
+			minNumber = number
+		}
+		if number > maxNumber {
+			maxNumber = number
+		}
+	}
+
+	outputCh <- MinMax{Min: minNumber, Max: maxNumber}
 }
