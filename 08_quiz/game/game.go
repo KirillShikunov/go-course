@@ -9,7 +9,10 @@ import (
 	"08_kahoot/score"
 	"context"
 	"fmt"
+	"os"
+	"os/signal"
 	"sync"
+	"syscall"
 )
 
 type Game struct {
@@ -26,26 +29,36 @@ func (g *Game) AddPlayer(newPlayer *player.Player) {
 }
 
 func (g *Game) Start() {
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
 	for {
-		currentQuestion, ok := g.questionProcessor.GetQuestion()
-		if ok != nil {
-			fmt.Println(ok)
-			return
-		}
-
-		g.playRound(currentQuestion)
-
-		if g.questionProcessor.IsLast() {
+		select {
+		case <-ctx.Done():
+			fmt.Println("Гра була перервана. Завершення...")
 			g.showScores()
 			return
-		}
+		default:
+			currentQuestion, ok := g.questionProcessor.GetQuestion()
+			if ok != nil {
+				fmt.Println(ok)
+				return
+			}
 
-		g.questionProcessor.Increment()
+			g.playRound(ctx, currentQuestion)
+
+			if g.questionProcessor.IsLast() {
+				g.showScores()
+				return
+			}
+
+			g.questionProcessor.Increment()
+		}
 	}
 }
 
-func (g *Game) playRound(question *question.Question) {
-	ctx, cancel := context.WithTimeout(context.Background(), config.PlayRoundTimeoutInSecond)
+func (g *Game) playRound(consoleCtx context.Context, question *question.Question) {
+	ctx, cancel := context.WithTimeout(consoleCtx, config.PlayRoundTimeoutInSecond)
 	defer cancel()
 
 	g.console.ShowQuestion(question)
