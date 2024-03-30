@@ -2,10 +2,6 @@ package transport
 
 import "fmt"
 
-type Transport interface {
-	Name() string
-}
-
 type Car struct {
 	number string
 }
