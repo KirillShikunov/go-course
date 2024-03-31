@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+<h1>Welcome, {{.Name}}!</h1>
+<h2>Your classes:</h2>
+<ul>
+    {{range .Classes}}
+    <li>
+        <a href="/class/{{.Id}}">{{ .Name }}</a>
+    </li>
+    {{end}}
+</ul>
+</body>
+</html>
