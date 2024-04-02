@@ -6,7 +6,6 @@ import (
 	"08_kahoot/console"
 	"08_kahoot/player"
 	"08_kahoot/question"
-	"08_kahoot/score"
 	"context"
 	"fmt"
 	"os"
@@ -19,7 +18,7 @@ type Game struct {
 	players           []*player.Player
 	sessions          []*Session
 	questionProcessor *question.Processor
-	scoreCalculator   *score.Calculator
+	scoreCalculator   *ScoreCalculator
 	console           console.Console
 }
 
@@ -105,7 +104,7 @@ func (g *Game) showScores() {
 	}
 }
 
-func NewGame(processor *question.Processor, calculator *score.Calculator) *Game {
+func NewGame(processor *question.Processor, calculator *ScoreCalculator) *Game {
 	return &Game{
 		players:           []*player.Player{},
 		questionProcessor: processor,

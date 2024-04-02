@@ -4,7 +4,6 @@ import (
 	"08_kahoot/game"
 	"08_kahoot/player"
 	"08_kahoot/question"
-	"08_kahoot/score"
 )
 
 func main() {
@@ -39,7 +38,7 @@ func main() {
 	)
 
 	processor := question.NewProcessor(questions)
-	newGame := game.NewGame(processor, score.NewScoreCalculator())
+	newGame := game.NewGame(processor, game.NewScoreCalculator())
 
 	newGame.AddPlayer(player.NewPlayer(1, "Андрій"))
 	newGame.AddPlayer(player.NewPlayer(2, "Олександр"))
