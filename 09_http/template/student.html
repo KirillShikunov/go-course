@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student: {{.StudentName}}</title>
+</head>
+<body>
+<h1>Student: {{.StudentName}}</h1>
+<h2>Class: {{.ClassName}}</h2>
+<h3>Average Scores:</h3>
+<ul>
+    {{range $subject, $score := .AvgScores}}
+    <li>{{$subject}}: {{$score}}</li>
+    {{end}}
+</ul>
+</body>
+</html>
