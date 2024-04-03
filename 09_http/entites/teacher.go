@@ -1,4 +1,4 @@
-package teacher
+package entites
 
 import "errors"
 
@@ -18,7 +18,7 @@ func NewTeacher(id int, name string) *Teacher {
 	return &Teacher{id, name}
 }
 
-func Find(id int) (*Teacher, error) {
+func FindTeacher(id int) (*Teacher, error) {
 	for _, t := range teachers {
 		if t.Id == id {
 			return t, nil

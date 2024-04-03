@@ -1,4 +1,4 @@
-package student
+package entites
 
 var students = []*Student{
 	NewStudent(1, "John Doe", 1, map[string]float64{"math": 90, "science": 80}),
@@ -18,7 +18,7 @@ func NewStudent(id int, name string, classId int, avgScore map[string]float64) *
 	return &Student{id, name, classId, avgScore}
 }
 
-func Find(id int) *Student {
+func FindStudent(id int) *Student {
 	for _, s := range students {
 		if s.Id == id {
 			return s

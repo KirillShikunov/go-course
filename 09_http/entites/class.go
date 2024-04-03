@@ -1,27 +1,22 @@
-package class
-
-import (
-	"09_http/student"
-	"09_http/teacher"
-)
+package entites
 
 var classes = []*Class{
-	NewClass(1, "10-B", teacher.NewTeacher(1, "Mr. Smith")),
-	NewClass(2, "10-A", teacher.NewTeacher(2, "Mr. Doe")),
+	NewClass(1, "10-B", NewTeacher(1, "Mr. Smith")),
+	NewClass(2, "10-A", NewTeacher(2, "Mr. Doe")),
 }
 
 type Class struct {
 	Id       int
 	Name     string
-	Teacher  *teacher.Teacher
-	Students []*student.Student
+	Teacher  *Teacher
+	Students []*Student
 }
 
-func NewClass(id int, name string, teacher *teacher.Teacher) *Class {
-	return &Class{id, name, teacher, []*student.Student{}}
+func NewClass(id int, name string, teacher *Teacher) *Class {
+	return &Class{id, name, teacher, []*Student{}}
 }
 
-func Find(id int) *Class {
+func FindClass(id int) *Class {
 	for _, c := range classes {
 		if c.Id == id {
 			return c

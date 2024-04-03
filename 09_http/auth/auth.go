@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"09_http/token"
 	"net/http"
 )
 
@@ -13,7 +12,7 @@ func CheckLoggedIn(r *http.Request) (int, bool) {
 		return 0, false
 	}
 
-	userId, valid := token.DecodeToken(cookie.Value)
+	userId, valid := DecodeToken(cookie.Value)
 	if !valid {
 		return 0, false
 	}
