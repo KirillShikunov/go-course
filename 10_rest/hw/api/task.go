@@ -4,6 +4,7 @@ import (
 	"10_rest/hw/entity"
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -16,9 +17,9 @@ var (
 	nextID = tasks[len(tasks)-1].ID + 1
 )
 
-func GetTasks(w http.ResponseWriter, r *http.Request) {
+func GetTaskList(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewEncoder(w).Encode(tasks); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.Printf("Не вдалося повернути список задач: %v", err)
 	}
 }
 
@@ -33,7 +34,7 @@ func GetTask(w http.ResponseWriter, r *http.Request) {
 	for _, task := range tasks {
 		if task.ID == id {
 			if err := json.NewEncoder(w).Encode(task); err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				log.Printf("Не вдалося повернути задачу: %v", err)
 			}
 			return
 		}
@@ -43,19 +44,20 @@ func GetTask(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateTask(w http.ResponseWriter, r *http.Request) {
-
 	var task entity.Task
 	if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
 	task.ID = nextID
-	nextID++
 	tasks = append(tasks, &task)
 	if err := json.NewEncoder(w).Encode(task); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.Printf("Не вдалося створити задачу: %v", err)
 		return
 	}
+
+	nextID++
 }
 
 func UpdateTask(w http.ResponseWriter, r *http.Request) {
@@ -77,7 +79,7 @@ func UpdateTask(w http.ResponseWriter, r *http.Request) {
 			tasks[i].Title = updatedTask.Title
 			tasks[i].Done = updatedTask.Done
 			if err := json.NewEncoder(w).Encode(tasks[i]); err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				log.Printf("Не вдалося оновити задачу: %v", err)
 				return
 			}
 			return
@@ -98,7 +100,6 @@ func DeleteTask(w http.ResponseWriter, r *http.Request) {
 	for i, task := range tasks {
 		if task.ID == id {
 			tasks = append(tasks[:i], tasks[i+1:]...)
-			w.WriteHeader(http.StatusOK)
 			return
 		}
 	}
@@ -109,7 +110,7 @@ func DeleteTask(w http.ResponseWriter, r *http.Request) {
 func InitRoutes(r *mux.Router) {
 	api := r.PathPrefix("/api").Subrouter()
 
-	api.HandleFunc("/tasks", GetTasks).Methods(http.MethodGet)
+	api.HandleFunc("/tasks", GetTaskList).Methods(http.MethodGet)
 	api.HandleFunc("/tasks/{id}", GetTask).Methods(http.MethodGet)
 	api.HandleFunc("/tasks", CreateTask).Methods(http.MethodPost)
 	api.HandleFunc("/tasks/{id}", UpdateTask).Methods(http.MethodPut)
