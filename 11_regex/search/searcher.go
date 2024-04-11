@@ -7,7 +7,7 @@ import (
 	"regexp"
 )
 
-func FindInFile(fileName string, regex string) ([]string, error) {
+func FindInFile(fileName string, regex *regexp.Regexp) ([]string, error) {
 	file, err := os.Open(fileName)
 	if err != nil {
 		return nil, fmt.Errorf("помилка при відкритті файлу: %w", err)
@@ -20,14 +20,12 @@ func FindInFile(fileName string, regex string) ([]string, error) {
 		}
 	}(file)
 
-	regexCompile := regexp.MustCompile(regex)
-
 	scanner := bufio.NewScanner(file)
 	var result []string
 	for scanner.Scan() {
 		line := scanner.Text()
 
-		matches := regexCompile.FindAllString(line, -1)
+		matches := regex.FindAllString(line, -1)
 		for _, match := range matches {
 			result = append(result, match)
 		}
