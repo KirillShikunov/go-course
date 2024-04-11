@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Class: {{.ClassName}}</title>
+</head>
+<body>
+<h1>Class: {{.ClassName}}</h1>
+<h2>Teacher: {{.TeacherName}}</h2>
+<h3>Students:</h3>
+<ol>
+    {{range .Students}}
+    <li><a href="/student/{{.Id}}">{{.Name}}</a></li>
+    {{end}}
+</ol>
+</body>
+</html>
