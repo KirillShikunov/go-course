@@ -15,6 +15,8 @@ func findPhones() {
 		return
 	}
 
+	fmt.Println("v2")
+
 	fmt.Println("Номери телефонів:")
 	fmt.Println(phones)
 }
