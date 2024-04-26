@@ -4,6 +4,7 @@ import (
 	"14_layers/internal/api"
 	"14_layers/internal/repositories"
 	"14_layers/internal/services"
+	"14_layers/internal/services/observers"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -30,8 +31,11 @@ type Option func(*App)
 
 func WithAPIRoutes(router *mux.Router) Option {
 	return func(app *App) {
+		orderObservers := []services.OrderObserver{
+			observers.NewEmailObserver(),
+		}
 		orderRepository := repositories.NewOrderRepository()
-		orderManager := services.NewOrderManager(orderRepository)
+		orderManager := services.NewOrderManager(orderRepository, orderObservers)
 
 		var apis = []api.Routable{
 			api.NewOrderApi(orderManager),

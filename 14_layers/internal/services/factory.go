@@ -7,6 +7,10 @@ type OrderRepository interface {
 	Create(order *models.Order)
 }
 
-func NewOrderManager(repository OrderRepository) *OrderManager {
-	return &OrderManager{repository}
+type OrderObserver interface {
+	Notify(order *models.Order)
+}
+
+func NewOrderManager(repository OrderRepository, observers []OrderObserver) *OrderManager {
+	return &OrderManager{repository, observers}
 }
