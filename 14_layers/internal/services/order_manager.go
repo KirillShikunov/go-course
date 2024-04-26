@@ -1,34 +1,32 @@
 package services
 
 import (
-	"14_layers/internal/dto"
 	"14_layers/internal/models"
-	"time"
 )
+
+type OrderRepository interface {
+	List() []*models.Order
+	Create(order *models.Order)
+}
+
+type OrderObserver interface {
+	Notify(order *models.Order)
+}
+
+func NewOrderManager(repository OrderRepository, observers []OrderObserver) *OrderManager {
+	return &OrderManager{repository, observers}
+}
 
 type OrderManager struct {
 	repository OrderRepository
 	observers  []OrderObserver
 }
 
-func (m *OrderManager) List() []*dto.OrderDTO {
-	var DTOs []*dto.OrderDTO
-
-	for _, order := range m.repository.List() {
-		DTOs = append(DTOs, dto.NewOrderFromModel(order))
-	}
-
-	return DTOs
+func (m *OrderManager) List() []*models.Order {
+	return m.repository.List()
 }
 
-func (m *OrderManager) Create(orderDTO *dto.OrderDTO) error {
-	order := &models.Order{
-		ID:        orderDTO.ID,
-		Name:      orderDTO.Name,
-		UserId:    orderDTO.UserId,
-		CreatedAt: time.Now(),
-	}
-
+func (m *OrderManager) Create(order *models.Order) error {
 	m.repository.Create(order)
 
 	m.notifyObservers(order)

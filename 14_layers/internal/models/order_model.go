@@ -5,6 +5,6 @@ import "time"
 type Order struct {
 	ID        int
 	Name      string
-	UserId    int
+	UserID    int
 	CreatedAt time.Time
 }

@@ -9,7 +9,7 @@ type EmailObserver struct {
 }
 
 func (o *EmailObserver) Notify(order *models.Order) {
-	fmt.Printf("EmailObserver: Sending email for user %d; Order ID: %d", order.UserId, order.ID)
+	fmt.Printf("EmailObserver: Sending email for user %d; Order ID: %d", order.UserID, order.ID)
 }
 
 func NewEmailObserver() *EmailObserver {
