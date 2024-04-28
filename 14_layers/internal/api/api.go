@@ -1,6 +1,7 @@
 package api
 
 import (
+	"14_layers/internal/mapper"
 	"14_layers/internal/repositories"
 	"14_layers/internal/services"
 	"14_layers/internal/services/observers"
@@ -17,9 +18,10 @@ func RegisterRoutes(router *mux.Router) {
 	}
 	orderRepository := repositories.NewOrderRepository()
 	orderManager := services.NewOrderManager(orderRepository, orderObservers)
+	orderMapper := mapper.NewOrderMapper()
 
 	var apis = []Routable{
-		NewOrderAPI(orderManager),
+		NewOrderAPI(orderManager, orderMapper),
 	}
 
 	for _, a := range apis {

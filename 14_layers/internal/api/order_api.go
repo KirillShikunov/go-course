@@ -2,6 +2,7 @@ package api
 
 import (
 	"14_layers/internal/dto"
+	"14_layers/internal/mapper"
 	"14_layers/internal/models"
 	"encoding/json"
 	"fmt"
@@ -14,12 +15,13 @@ type OrderManager interface {
 	Create(orderDTO *models.Order) error
 }
 
-func NewOrderAPI(manager OrderManager) *OrderAPI {
-	return &OrderAPI{manager}
+func NewOrderAPI(manager OrderManager, mapper mapper.OrderMapper) *OrderAPI {
+	return &OrderAPI{manager, mapper}
 }
 
 type OrderAPI struct {
 	manager OrderManager
+	mapper  mapper.OrderMapper
 }
 
 func (api *OrderAPI) RegisterRoutes(router *mux.Router) {
@@ -29,7 +31,7 @@ func (api *OrderAPI) RegisterRoutes(router *mux.Router) {
 
 func (api *OrderAPI) listOrders(w http.ResponseWriter, r *http.Request) {
 	orders := api.manager.List()
-	orderDTOs := api.convertModelsToDTOs(orders)
+	orderDTOs := api.mapper.ConvertModelsToDTOs(orders)
 
 	err := json.NewEncoder(w).Encode(orderDTOs)
 	if err != nil {
@@ -45,7 +47,7 @@ func (api *OrderAPI) createOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	order := api.convertDTOToModel(orderDTO)
+	order := api.mapper.ConvertDTOToModel(orderDTO)
 
 	if err := api.manager.Create(order); err != nil {
 		http.Error(w, fmt.Sprintf("Failed to create order: %s", err.Error()), http.StatusInternalServerError)
@@ -53,25 +55,4 @@ func (api *OrderAPI) createOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-}
-
-func (api *OrderAPI) convertDTOToModel(orderDTO *dto.Order) *models.Order {
-	return &models.Order{
-		Name:   orderDTO.Name,
-		UserID: orderDTO.UserID,
-	}
-}
-
-func (api *OrderAPI) convertModelsToDTOs(orders []*models.Order) []*dto.Order {
-	orderDTOs := make([]*dto.Order, len(orders))
-
-	for i, order := range orders {
-		orderDTOs[i] = &dto.Order{
-			ID:     order.ID,
-			Name:   order.Name,
-			UserID: order.UserID,
-		}
-	}
-
-	return orderDTOs
 }
