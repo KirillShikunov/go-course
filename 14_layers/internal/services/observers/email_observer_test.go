@@ -2,28 +2,28 @@ package observers
 
 import (
 	"14_layers/internal/models"
-	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 type MockEmailSender struct {
-	mock.Mock
+	order   *models.Order
+	testing *testing.T
 }
 
 func (m *MockEmailSender) SendEmail(userID int, mailID int) {
-	m.Called(userID, mailID)
+	assert.Equal(m.testing, m.order.UserID, userID)
+	assert.Equal(m.testing, OrderCreatedMailID, mailID)
 }
 
 func TestNotify(t *testing.T) {
-	mockSender := &MockEmailSender{}
-	observer := &EmailObserver{sender: mockSender}
-
 	order := &models.Order{
 		ID:     456,
 		UserID: 123,
 	}
 
-	mockSender.On("SendEmail", order.UserID, order.ID).Return(nil)
+	mockSender := &MockEmailSender{order, t}
+	observer := &EmailObserver{sender: mockSender}
 
 	observer.Notify(order)
 }

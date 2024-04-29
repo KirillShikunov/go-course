@@ -4,6 +4,8 @@ import (
 	"14_layers/internal/models"
 )
 
+const OrderCreatedMailID = 123
+
 type EmailSender interface {
 	SendEmail(userID int, mailID int)
 }
@@ -13,7 +15,7 @@ type EmailObserver struct {
 }
 
 func (o *EmailObserver) Notify(order *models.Order) {
-	o.sender.SendEmail(order.UserID, order.ID)
+	o.sender.SendEmail(order.UserID, OrderCreatedMailID)
 }
 
 func NewEmailObserver() *EmailObserver {
