@@ -12,15 +12,11 @@ type Email struct {
 }
 
 type MockEmailSender struct {
-	sentEmails []Email
+	SentEmails []Email
 }
 
 func (m *MockEmailSender) SendEmail(userID int, mailID int) {
-	m.sentEmails = append(m.sentEmails, Email{ID: mailID, UserID: userID})
-}
-
-func (m *MockEmailSender) GetSentEmails() []Email {
-	return m.sentEmails
+	m.SentEmails = append(m.SentEmails, Email{ID: mailID, UserID: userID})
 }
 
 func TestNotify(t *testing.T) {
@@ -34,5 +30,5 @@ func TestNotify(t *testing.T) {
 	observer.Notify(order)
 
 	expected := []Email{{ID: OrderCreatedMailID, UserID: order.UserID}}
-	assert.Equal(t, expected, mockSender.GetSentEmails())
+	assert.Equal(t, expected, mockSender.SentEmails)
 }
