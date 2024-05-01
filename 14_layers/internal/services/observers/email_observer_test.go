@@ -6,14 +6,21 @@ import (
 	"testing"
 )
 
+type Email struct {
+	ID     int
+	UserID int
+}
+
 type MockEmailSender struct {
-	order   *models.Order
-	testing *testing.T
+	sentEmails []Email
 }
 
 func (m *MockEmailSender) SendEmail(userID int, mailID int) {
-	assert.Equal(m.testing, m.order.UserID, userID)
-	assert.Equal(m.testing, OrderCreatedMailID, mailID)
+	m.sentEmails = append(m.sentEmails, Email{ID: mailID, UserID: userID})
+}
+
+func (m *MockEmailSender) GetSentEmails() []Email {
+	return m.sentEmails
 }
 
 func TestNotify(t *testing.T) {
@@ -22,8 +29,10 @@ func TestNotify(t *testing.T) {
 		UserID: 123,
 	}
 
-	mockSender := &MockEmailSender{order, t}
+	mockSender := &MockEmailSender{}
 	observer := &EmailObserver{sender: mockSender}
-
 	observer.Notify(order)
+
+	expected := []Email{{ID: OrderCreatedMailID, UserID: order.UserID}}
+	assert.Equal(t, expected, mockSender.GetSentEmails())
 }
