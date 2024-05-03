@@ -5,28 +5,9 @@ import (
 	"time"
 )
 
-var orders = []*models.Order{
-	{
-		ID:        1,
-		Name:      "Order #1",
-		UserID:    1,
-		CreatedAt: time.Date(2021, time.January, 1, 0, 0, 0, 0, time.UTC),
-	},
-	{
-		ID:        2,
-		Name:      "Order #2",
-		UserID:    2,
-		CreatedAt: time.Date(2022, time.January, 1, 0, 0, 0, 0, time.UTC),
-	},
-	{
-		ID:        3,
-		Name:      "Order #3",
-		UserID:    2,
-		CreatedAt: time.Date(2023, time.January, 1, 0, 0, 0, 0, time.UTC),
-	},
-}
+var orders []*models.Order
 
-var LastID = 3
+var LastID = 0
 
 func NewOrderRepository() *OrderRepository {
 	return &OrderRepository{}
