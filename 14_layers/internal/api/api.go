@@ -1,6 +1,8 @@
 package api
 
 import (
+	"14_layers/internal/db"
+	"14_layers/internal/mail"
 	"14_layers/internal/mapper"
 	"14_layers/internal/repositories"
 	"14_layers/internal/services"
@@ -13,10 +15,14 @@ type Routable interface {
 }
 
 func RegisterRoutes(router *mux.Router) {
+	sender := mail.NewEmailSender()
 	orderObservers := []services.OrderObserver{
-		observers.NewEmailObserver(),
+		observers.NewEmailObserver(sender),
 	}
-	orderRepository := repositories.NewOrderRepository()
+
+	connection := db.GetConnection()
+	orderRepository := repositories.NewOrderRepository(connection)
+
 	orderManager := services.NewOrderManager(orderRepository, orderObservers)
 	orderMapper := mapper.NewOrderMapper()
 

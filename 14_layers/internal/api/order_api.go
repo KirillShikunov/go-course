@@ -54,5 +54,6 @@ func (api *OrderAPI) createOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println("Order created")
 	w.WriteHeader(http.StatusCreated)
 }

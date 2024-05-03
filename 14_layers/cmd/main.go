@@ -2,6 +2,7 @@ package main
 
 import (
 	"14_layers/internal/api"
+	"14_layers/internal/config"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -12,6 +13,6 @@ func main() {
 
 	api.RegisterRoutes(router)
 
-	log.Println("Starting web server on localhost:8081")
-	log.Fatal(http.ListenAndServe(":8081", router))
+	port := config.Env("PORT")
+	log.Fatal(http.ListenAndServe(":"+port, router))
 }

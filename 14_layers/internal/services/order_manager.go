@@ -2,6 +2,7 @@ package services
 
 import (
 	"14_layers/internal/models"
+	"math/rand"
 )
 
 type OrderRepository interface {
@@ -27,6 +28,8 @@ func (m *OrderManager) List() []*models.Order {
 }
 
 func (m *OrderManager) Create(order *models.Order) error {
+	order.Status = models.OrderStatusCreated
+	order.TotalPrice = rand.Intn(100)
 	m.repository.Create(order)
 
 	m.notifyObservers(order)
