@@ -30,6 +30,6 @@ func (m *OrderMapper) ConvertModelsToDTOs(orders []*models.Order) []*dto.Order {
 	return orderDTOs
 }
 
-func NewOrderMapper() OrderMapper {
-	return OrderMapper{}
+func NewOrderMapper() *OrderMapper {
+	return &OrderMapper{}
 }

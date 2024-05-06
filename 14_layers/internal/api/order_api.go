@@ -16,13 +16,13 @@ type OrderManager interface {
 	Create(ctx context.Context, orderDTO *models.Order) error
 }
 
-func NewOrderAPI(manager OrderManager, mapper mapper.OrderMapper) *OrderAPI {
+func NewOrderAPI(manager OrderManager, mapper *mapper.OrderMapper) *OrderAPI {
 	return &OrderAPI{manager, mapper}
 }
 
 type OrderAPI struct {
 	manager OrderManager
-	mapper  mapper.OrderMapper
+	mapper  *mapper.OrderMapper
 }
 
 func (api *OrderAPI) RegisterRoutes(router *mux.Router) {
