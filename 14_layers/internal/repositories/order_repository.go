@@ -2,7 +2,9 @@ package repositories
 
 import (
 	"14_layers/internal/models"
+	"context"
 	"gorm.io/gorm"
+	"time"
 )
 
 func NewOrderRepository(connection *gorm.DB) *OrderRepository {
@@ -13,13 +15,15 @@ type OrderRepository struct {
 	connection *gorm.DB
 }
 
-func (r *OrderRepository) Create(order *models.Order) {
-	r.connection.Create(&order)
+func (r *OrderRepository) Create(ctx context.Context, order *models.Order) error {
+	return r.connection.WithContext(ctx).Create(&order).Error
 }
 
-func (r *OrderRepository) List() []*models.Order {
+func (r *OrderRepository) List(ctx context.Context) ([]*models.Order, error) {
 	var orders []*models.Order
-	r.connection.Find(&orders)
 
-	return orders
+	time.Sleep(10 * time.Second)
+	err := r.connection.WithContext(ctx).Find(&orders).Error
+
+	return orders, err
 }
