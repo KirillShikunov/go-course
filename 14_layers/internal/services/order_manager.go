@@ -12,7 +12,7 @@ type OrderRepository interface {
 }
 
 type OrderObserver interface {
-	Notify(order *models.Order)
+	Notify(ctx context.Context, order *models.Order)
 }
 
 func NewOrderManager(repository OrderRepository, observers []OrderObserver) *OrderManager {
@@ -33,13 +33,13 @@ func (m *OrderManager) Create(ctx context.Context, order *models.Order) error {
 	order.TotalPrice = rand.Intn(100)
 	err := m.repository.Create(ctx, order)
 
-	m.notifyObservers(order)
+	m.notifyObservers(ctx, order)
 
 	return err
 }
 
-func (m *OrderManager) notifyObservers(order *models.Order) {
+func (m *OrderManager) notifyObservers(ctx context.Context, order *models.Order) {
 	for _, observer := range m.observers {
-		observer.Notify(order)
+		observer.Notify(ctx, order)
 	}
 }

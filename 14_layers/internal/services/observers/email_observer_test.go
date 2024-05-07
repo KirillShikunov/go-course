@@ -1,23 +1,32 @@
 package observers
 
 import (
+	"14_layers/internal/dto"
 	"14_layers/internal/models"
+	"context"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
 )
 
 type Email struct {
-	ID     int
-	UserID int
+	ID    int
+	Email string
 }
 
 type MockEmailSender struct {
 	SentEmails []Email
 }
 
-func (m *MockEmailSender) SendEmail(userID int, mailID int) {
-	m.SentEmails = append(m.SentEmails, Email{ID: mailID, UserID: userID})
+func (m *MockEmailSender) SendEmail(email string, mailID int) {
+	m.SentEmails = append(m.SentEmails, Email{ID: mailID, Email: email})
+}
+
+type MockUserService struct {
+}
+
+func (m *MockUserService) GetUser(ctx context.Context, id int) (*dto.User, error) {
+	return &dto.User{ID: id, Username: "John", Email: "john@gmail.com"}, nil
 }
 
 func TestNotify(t *testing.T) {
@@ -30,9 +39,13 @@ func TestNotify(t *testing.T) {
 	}
 
 	mockSender := &MockEmailSender{}
-	observer := &EmailObserver{sender: mockSender}
-	observer.Notify(order)
+	userService := &MockUserService{}
 
-	expected := []Email{{ID: order.Status, UserID: order.CustomerID}}
+	ctx := context.Background()
+
+	observer := &EmailObserver{sender: mockSender, service: userService}
+	observer.Notify(ctx, order)
+
+	expected := []Email{{ID: order.Status, Email: "john@gmail.com"}}
 	assert.Equal(t, expected, mockSender.SentEmails)
 }

@@ -5,8 +5,8 @@ import "fmt"
 type EmailSender struct {
 }
 
-func (e *EmailSender) SendEmail(userID int, mailID int) {
-	fmt.Printf("EmailSender: Sending email for user %d; Mail ID: %d", userID, mailID)
+func (e *EmailSender) SendEmail(email string, mailID int) {
+	fmt.Printf("EmailSender: Email: %s; Mail ID: %d", email, mailID)
 }
 
 func NewEmailSender() *EmailSender {
