@@ -12,10 +12,10 @@ import (
 )
 
 type APITest struct {
-	client       *http.Client
-	server       *httptest.Server
-	container    *di.ServiceContainer
-	dbConnection *gorm.DB
+	client    *http.Client
+	server    *httptest.Server
+	container *di.ServiceContainer
+	db        *gorm.DB
 }
 
 func (t *APITest) setUp() {
@@ -27,7 +27,7 @@ func (t *APITest) setUp() {
 	t.client = http.DefaultClient
 	t.server = httptest.NewServer(router)
 	t.container = container
-	t.dbConnection = container.DbConnection()
+	t.db = container.DbConnection()
 }
 
 func (t *APITest) tearDown() {
@@ -40,7 +40,7 @@ func (t *APITest) getAbsolutePath(path string) string {
 
 func (t *APITest) truncateTables(tables []string) {
 	for _, table := range tables {
-		t.dbConnection.Exec(fmt.Sprintf("TRUNCATE %s", table))
+		t.db.Exec(fmt.Sprintf("TRUNCATE %s", table))
 	}
 }
 
