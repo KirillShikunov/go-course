@@ -2,31 +2,26 @@ package repositories
 
 import (
 	"14_layers/internal/models"
-	"time"
+	"context"
+	"gorm.io/gorm"
 )
 
-var orders []*models.Order
-
-var LastID = 0
-
-func NewOrderRepository() *OrderRepository {
-	return &OrderRepository{}
+func NewOrderRepository(connection *gorm.DB) *OrderRepository {
+	return &OrderRepository{connection}
 }
 
 type OrderRepository struct {
+	connection *gorm.DB
 }
 
-func (r OrderRepository) Create(order *models.Order) {
-	newID := LastID + 1
-
-	order.ID = newID
-	order.CreatedAt = time.Now()
-
-	orders = append(orders, order)
-
-	LastID = newID
+func (r *OrderRepository) Create(ctx context.Context, order *models.Order) error {
+	return r.connection.WithContext(ctx).Create(&order).Error
 }
 
-func (r OrderRepository) List() []*models.Order {
-	return orders
+func (r *OrderRepository) List(ctx context.Context) ([]*models.Order, error) {
+	var orders []*models.Order
+
+	err := r.connection.WithContext(ctx).Find(&orders).Error
+
+	return orders, err
 }

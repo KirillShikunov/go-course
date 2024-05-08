@@ -4,6 +4,7 @@ import (
 	"14_layers/internal/models"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
 
 type Email struct {
@@ -21,14 +22,17 @@ func (m *MockEmailSender) SendEmail(userID int, mailID int) {
 
 func TestNotify(t *testing.T) {
 	order := &models.Order{
-		ID:     456,
-		UserID: 123,
+		ID:         456,
+		CustomerID: 123,
+		TotalPrice: 44,
+		Status:     OrderCreatedMailID,
+		CreatedAt:  time.Now(),
 	}
 
 	mockSender := &MockEmailSender{}
 	observer := &EmailObserver{sender: mockSender}
 	observer.Notify(order)
 
-	expected := []Email{{ID: OrderCreatedMailID, UserID: order.UserID}}
+	expected := []Email{{ID: order.Status, UserID: order.CustomerID}}
 	assert.Equal(t, expected, mockSender.SentEmails)
 }

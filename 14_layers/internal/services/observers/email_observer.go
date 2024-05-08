@@ -15,9 +15,9 @@ type EmailObserver struct {
 }
 
 func (o *EmailObserver) Notify(order *models.Order) {
-	o.sender.SendEmail(order.UserID, OrderCreatedMailID)
+	o.sender.SendEmail(order.CustomerID, OrderCreatedMailID)
 }
 
-func NewEmailObserver() *EmailObserver {
-	return &EmailObserver{}
+func NewEmailObserver(sender EmailSender) *EmailObserver {
+	return &EmailObserver{sender}
 }
