@@ -1,4 +1,4 @@
-package client
+package user
 
 import (
 	"14_layers/internal/cache"
@@ -15,7 +15,11 @@ type UserClient struct {
 
 func (c *UserClient) GetUser(ctx context.Context, id int) (string, error) {
 	key := fmt.Sprintf("user_%d", id)
-	userJson := c.cache.Get(ctx, key)
+	userJson, err := c.cache.Get(ctx, key)
+
+	if err != nil {
+		return "", fmt.Errorf("error getting user data: %w", err)
+	}
 
 	if userJson == "" {
 		foundUser := &dto.User{ID: id, Username: "user1", Email: "test@mail.com"}
@@ -25,7 +29,9 @@ func (c *UserClient) GetUser(ctx context.Context, id int) (string, error) {
 		}
 
 		expireAt := time.Duration(5) * time.Minute
-		c.cache.Set(ctx, key, string(jsonFoundUser), expireAt)
+		if err := c.cache.Set(ctx, key, string(jsonFoundUser), expireAt); err != nil {
+			return "", fmt.Errorf("error setting user data: %w", err)
+		}
 	}
 
 	return userJson, nil

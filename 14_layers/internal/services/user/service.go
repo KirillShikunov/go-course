@@ -1,18 +1,17 @@
-package services
+package user
 
 import (
-	"14_layers/internal/client"
 	"14_layers/internal/dto"
 	"context"
 	"encoding/json"
 	"fmt"
 )
 
-type UserService struct {
-	client *client.UserClient
+type Service struct {
+	client *UserClient
 }
 
-func (s *UserService) GetUser(ctx context.Context, id int) (*dto.User, error) {
+func (s *Service) GetUser(ctx context.Context, id int) (*dto.User, error) {
 	data, err := s.client.GetUser(ctx, id)
 	if err != nil {
 		return nil, err
@@ -20,7 +19,7 @@ func (s *UserService) GetUser(ctx context.Context, id int) (*dto.User, error) {
 	return s.unmarshalUser(data)
 }
 
-func (s *UserService) unmarshalUser(data string) (*dto.User, error) {
+func (s *Service) unmarshalUser(data string) (*dto.User, error) {
 	var user dto.User
 	err := json.Unmarshal([]byte(data), &user)
 	if err != nil {
@@ -29,6 +28,6 @@ func (s *UserService) unmarshalUser(data string) (*dto.User, error) {
 	return &user, nil
 }
 
-func NewUserService(client *client.UserClient) *UserService {
-	return &UserService{client}
+func NewUserService(client *UserClient) *Service {
+	return &Service{client}
 }

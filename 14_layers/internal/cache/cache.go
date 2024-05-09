@@ -6,6 +6,6 @@ import (
 )
 
 type Cache interface {
-	Get(ctx context.Context, key string) string
-	Set(ctx context.Context, key string, value string, expireAt time.Duration)
+	Get(ctx context.Context, key string) (string, error)
+	Set(ctx context.Context, key string, value string, expireAt time.Duration) error
 }

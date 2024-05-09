@@ -1,4 +1,4 @@
-package observers
+package order
 
 import (
 	"14_layers/internal/dto"
