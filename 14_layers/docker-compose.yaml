@@ -12,3 +12,10 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - ./db-init:/docker-entrypoint-initdb.d
+  redis:
+    image: redislabs/rejson:latest
+    container_name: redis
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "6379:6379"
